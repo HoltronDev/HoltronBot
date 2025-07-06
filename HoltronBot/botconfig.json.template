@@ -1,0 +1,20 @@
+{
+    "BotName": "<Your Bots Username on Twitch>",
+    "BotUserID": "<Your Bots User ID from Twitch>",
+    "ClientID": "<Your Bots Client ID>",
+    "ClientSecret": "<Your Bots Client Secret>",
+    "BroadcasterID": "<Your Broadcaster ID>",
+    "RedirectURI": "http://localhost:3000",
+    "BotGreetsStreamer": false,
+    "Subscriptions": [
+        "channel.chat.message",
+        "channel.follow",
+        "channel.subscribe",
+        "channel.ban"
+    ],
+    "Features": [
+        "ChatHandler",
+        "Jokes",
+        "Stockpile"
+    ]
+}
