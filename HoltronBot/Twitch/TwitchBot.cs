@@ -99,7 +99,7 @@ namespace HoltronBot.Twitch
                 return;
             }
 
-            var buffer = new byte[4092];
+            var buffer = new byte[16368];
             var result = await websocketClient.ReceiveAsync(buffer, default);
 
             if (result.Count > 0)
@@ -113,9 +113,8 @@ namespace HoltronBot.Twitch
                 catch (Exception ex)
                 {
                     Log.Error("Somethin' borked in the message deserialize. Error: {Message} | Data: {data}", ex.Message, data);
-                    //Console.WriteLine($"Somethin' borked in the message deserialize. Error: {ex.Message} | Data: {data}");
                 }
-                
+
                 var handler = websocketHandlers[message.Metadata.MessageType];
                 if (handler != null)
                 {
@@ -124,7 +123,6 @@ namespace HoltronBot.Twitch
                 else
                 {
                     Log.Error("Unknown Message: {MessageType}", message.Metadata.MessageType);
-                    //Console.WriteLine($"Unknown Message: {message.Metadata.MessageType}");
                 }
             }
         }

@@ -50,8 +50,8 @@ namespace HoltronBot.Twitch
 
             // TODO: Refresh Logic
 
-            Task.Run(GetAuthorizationCodeFromTwitch).Wait();
-            Task.Run(GetAppTokenWithCodeFromTwitch).Wait();
+            GetAuthorizationCodeFromTwitch();
+            GetAppTokenWithCodeFromTwitch();
 
             return appToken;
         }

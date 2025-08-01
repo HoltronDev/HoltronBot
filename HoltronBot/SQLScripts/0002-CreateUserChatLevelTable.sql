@@ -1,0 +1,6 @@
+CREATE TABLE userchatlevel (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    loginname TEXT NOT NULL,
+    currentlevel INTEGER NOT NULL DEFAULT 0,
+    currentexperience INTEGER NOT NULL DEFAULT 0
+);

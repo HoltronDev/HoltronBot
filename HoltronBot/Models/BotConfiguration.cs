@@ -14,6 +14,10 @@ namespace HoltronBot.Models
         public bool BotGreetsStreamer { get; set; }
         public string[] Subscriptions { get; set; }
         public string[] Features { get; set; }
+        public string[] ExtraScopes { get; set; }
+        public bool DisplayNotifications { get; set; }
+        public int TimeToDisplayNotifications { get; set; }
+        public UserChatLevelConfig UserChatLevelConfig { get; set; }
 
         public static BotConfiguration LoadConfiguration(string filepath = null)
         {

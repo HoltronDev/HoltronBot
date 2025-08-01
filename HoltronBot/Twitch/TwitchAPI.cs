@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using HoltronBot.Models;
+using HoltronBot.Twitch.Models;
 using HoltronBot.Twitch.Models.EventSubAPIMessages;
 using HoltronBot.Twitch.Models.WebsocketMessages;
 using RestSharp;
@@ -28,6 +29,42 @@ namespace HoltronBot.Twitch
             userID = botConfig.BotUserID;
         }
 
+        public string CreateClip()
+        {
+            var request = new RestRequest(baseURL + $"helix/clips?broadcaster_id={broadcasterID}")
+                .AddHeader("Authorization", $"Bearer {twitchAuth.GetUserToken()}")
+                .AddHeader("Client-Id", clientID);
+
+            var client = new RestClient();
+            var response = client.Execute(request);
+
+            if (response.IsSuccessful)
+            {
+                var clipResponse = JsonSerializer.Deserialize<CreateClipResponse>(response.Content);
+                return clipResponse.ClipData.EditURL;
+            }
+            return null;
+        }
+
+        public UserData GetUserData(string loginName)
+        {
+            var request = new RestRequest(baseURL + $"hlix/users?login={loginName}")
+                .AddHeader("Authorization", $"Bearer {twitchAuth.GetUserToken()}")
+                .AddHeader("Client-Id", clientID);
+
+            var client = new RestClient();
+            var response = client.Execute(request);
+
+            if (response.IsSuccessful)
+            {
+                var userData = JsonSerializer.Deserialize<GetUserDataResponse>(response.Content);
+                return userData.Data[0];
+            }
+
+            Log.Warning($"Request to get user data for {loginName} failed. Response: {response.ErrorMessage}");
+            return null;
+        }
+
         public void SendMessage(string message)
         {
             var sendMessage = new SendMessage
@@ -49,7 +86,27 @@ namespace HoltronBot.Twitch
             var response = client.Execute(request);
 
             Log.Debug("{Content}", response.Content);
-            //Console.WriteLine(response.Content);
+        }
+
+        public void SendShoutOut(string targetBroadcasterID)
+        {
+            var messageBody = new SendShoutOutMessage
+            {
+                FromBroadcasterID = broadcasterID,
+                ToBroadcasterID = targetBroadcasterID,
+                ModeratorID = userID
+            };
+
+            var jsonBody = JsonSerializer.Serialize(messageBody);
+
+            var request = new RestRequest(baseURL + "helix/chat/shoutouts")
+                .AddHeader("Authorization", $"Bearer {twitchAuth.GetUserToken()}")
+                .AddHeader("Client-Id", clientID)
+                .AddHeader("Content-Type", "application/json")
+                .AddBody(jsonBody);
+
+            var client = new RestClient();
+            var response = client.Execute(request);
         }
 
         public void SubscribeToChannels(string sessionID)

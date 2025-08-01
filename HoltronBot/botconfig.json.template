@@ -15,6 +15,17 @@
     "Features": [
         "ChatHandler",
         "Jokes",
-        "Stockpile"
-    ]
+        "Stockpile",
+        "Clippinator",
+        "ShoutOut",
+        "UserChatLevel"
+    ],
+    "ExtraScopes": [
+        "clips:edit"
+    ],
+    "DisplayNotifications": false,
+    "TimeToDisplayNotifications": 5,
+    "UserChatLevelConfig": {
+        "ExperienceToFirstLevel": 5
+    }
 }

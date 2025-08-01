@@ -10,10 +10,12 @@ namespace HoltronBot.Features
         private int foodStock = 0;
         private int drinkStock = 0;
 
+        private readonly Game1 game;
         private readonly TwitchAPI twitchAPI;
 
-        public Stockpile(TwitchAPI twitchAPI)
+        public Stockpile(Game1 game, TwitchAPI twitchAPI)
         {
+            this.game = game;
             this.twitchAPI = twitchAPI;
             Initialize();
         }
@@ -25,19 +27,28 @@ namespace HoltronBot.Features
 
         public void HandlePayload(Payload payload)
         {
+            string msg;
             switch (payload.Event.Message.Text)
             {
                 case "!giveSporkFood":
-                    twitchAPI.SendMessage(AddToFoodStock());
+                    msg = AddToFoodStock();
+                    twitchAPI.SendMessage(msg);
+                    game.DisplayText(msg);
                     break;
                 case "!giveSporkDrink":
-                    twitchAPI.SendMessage(AddToDrinkStock());
+                    msg = AddToDrinkStock();
+                    twitchAPI.SendMessage(msg);
+                    game.DisplayText(msg);
                     break;
                 case "!sporksHoard":
-                    twitchAPI.SendMessage(GetCurrentStockpile());
+                    msg = GetCurrentStockpile();
+                    twitchAPI.SendMessage(msg);
+                    game.DisplayText(msg);
                     break;
                 case "!commands":
-                    twitchAPI.SendMessage($"@{payload.Event.ChatterUserName}: !discord, !lurk, !giveSporkFood, !giveSporkDrink, !sporksHoard (more to come once Holtron stops being lazy.)");
+                    msg = $"@{payload.Event.ChatterUserName}: !discord, !lurk, !giveSporkFood, !giveSporkDrink, !sporksHoard (more to come once Holtron stops being lazy.)";
+                    twitchAPI.SendMessage(msg);
+                    game.DisplayText(msg);
                     break;
             }
         }
@@ -95,7 +106,7 @@ namespace HoltronBot.Features
                 Log.Error("Error adding drink to stockpile. Error: {Message}", ex.Message);
                 return "Apparently Holtron sucks at coding, tell him so!";
             }
-            return $"I suppose I could add this to my hoard...";
+            return "I suppose I could add this to my hoard...";
         }
 
         private string AddToDrinkStock()
@@ -113,7 +124,7 @@ namespace HoltronBot.Features
                 Log.Error("Error adding drink to stockpile. Error: {Message}", ex.Message);
                 return "Apparently Holtron sucks at coding, tell him so!";
             }
-            return $"Ah, yes, a refreshing beverage for me!";
+            return "Ah, yes, a refreshing beverage for me!";
         }
     }
 }

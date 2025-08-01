@@ -8,11 +8,13 @@ namespace HoltronBot.Features
 {
     public class Jokes : IFeature
     {
+        private Game1 game;
         private TwitchAPI twitchAPI;
         private List<string> jokes;
 
-        public Jokes(TwitchAPI twitchAPI)
+        public Jokes(Game1 game, TwitchAPI twitchAPI)
         {
+            this.game = game;
             this.twitchAPI = twitchAPI;
             InitializeJokeLibrary();
         }
@@ -25,7 +27,9 @@ namespace HoltronBot.Features
             }
 
             var random = new Random();
-            twitchAPI.SendMessage(jokes[random.Next(0, jokes.Count)]);
+            var joke = jokes[random.Next(0, jokes.Count)];
+            twitchAPI.SendMessage(joke);
+            game.DisplayText(joke);
         }
 
         public void Update()
