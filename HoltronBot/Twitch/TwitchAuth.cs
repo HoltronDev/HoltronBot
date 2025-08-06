@@ -34,7 +34,7 @@ namespace HoltronBot.Twitch
             }
             if (botConfig.ExtraScopes != null)
             {
-                this.scopes.AddRange(botConfig.ExtraScopes);
+                scopes.AddRange(botConfig.ExtraScopes);
             }
             this.scopes = [.. scopes.Distinct()];
             clientID = botConfig.ClientID;
