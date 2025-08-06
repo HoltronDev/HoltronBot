@@ -12,6 +12,7 @@ namespace HoltronBot.Models
         public string BroadcasterID { get; set; }
         public string RedirectURI { get; set; }
         public bool BotGreetsStreamer { get; set; }
+        public string DiscordLink { get; set; }
         public string[] Subscriptions { get; set; }
         public string[] Features { get; set; }
         public string[] ExtraScopes { get; set; }

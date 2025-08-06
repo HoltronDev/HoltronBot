@@ -31,6 +31,7 @@ namespace HoltronBot.Twitch
 
         public string CreateClip()
         {
+            Log.Debug("Sending request to create a clip");
             var request = new RestRequest(baseURL + $"helix/clips?broadcaster_id={broadcasterID}")
                 .AddHeader("Authorization", $"Bearer {twitchAuth.GetUserToken()}")
                 .AddHeader("Client-Id", clientID);
@@ -43,12 +44,14 @@ namespace HoltronBot.Twitch
                 var clipResponse = JsonSerializer.Deserialize<CreateClipResponse>(response.Content);
                 return clipResponse.ClipData.EditURL;
             }
+
+            Log.Warning("Failed to create clip.");
             return null;
         }
 
         public UserData GetUserData(string loginName)
         {
-            var request = new RestRequest(baseURL + $"hlix/users?login={loginName}")
+            var request = new RestRequest(baseURL + $"helix/users?login={loginName}")
                 .AddHeader("Authorization", $"Bearer {twitchAuth.GetUserToken()}")
                 .AddHeader("Client-Id", clientID);
 
@@ -85,7 +88,10 @@ namespace HoltronBot.Twitch
             var client = new RestClient();
             var response = client.Execute(request);
 
-            Log.Debug("{Content}", response.Content);
+            if (!response.IsSuccessful)
+            {
+                Log.Warning("Failed to send chat message.");
+            }
         }
 
         public void SendShoutOut(string targetBroadcasterID)
@@ -107,6 +113,11 @@ namespace HoltronBot.Twitch
 
             var client = new RestClient();
             var response = client.Execute(request);
+
+            if (!response.IsSuccessful)
+            {
+                Log.Warning("Failed to send Shout Out.");
+            }
         }
 
         public void SubscribeToChannels(string sessionID)
@@ -141,8 +152,11 @@ namespace HoltronBot.Twitch
             if (response.IsSuccessful)
             {
                 var result = JsonSerializer.Deserialize<CreateEventSubSubscriptionResponse>(response.Content);
-                Log.Debug("{Content}", response.Content);
+                Log.Information($"Subscription Complete: {response.Content}");
+                return;
             }
+
+            Log.Error("Failed To Subscribe to Channels.");
         }
     }
 }

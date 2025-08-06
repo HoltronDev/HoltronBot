@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using HoltronBot.Models;
 using HoltronBot.Twitch.Models.EventSubAPIMessages;
@@ -32,6 +31,10 @@ namespace HoltronBot.Twitch
             foreach (var subscription in botConfig.Subscriptions)
             {
                 scopes.AddRange(EventSubSubscriptionMessages.EventSubSubscriptionsRequests[subscription].Scopes);
+            }
+            if (botConfig.ExtraScopes != null)
+            {
+                this.scopes.AddRange(botConfig.ExtraScopes);
             }
             this.scopes = [.. scopes.Distinct()];
             clientID = botConfig.ClientID;

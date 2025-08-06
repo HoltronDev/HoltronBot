@@ -6,6 +6,7 @@
     "BroadcasterID": "<Your Broadcaster ID>",
     "RedirectURI": "http://localhost:3000",
     "BotGreetsStreamer": false,
+    "DiscordLink": "",
     "Subscriptions": [
         "channel.chat.message",
         "channel.follow",

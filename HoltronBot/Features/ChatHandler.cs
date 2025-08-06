@@ -14,6 +14,8 @@ namespace HoltronBot.Features
         private readonly Game1 game = game;
         private readonly TwitchAPI twitchAPI = twitchAPI;
         private readonly List<string> chattersThisStream = [];
+        private readonly int chatCountDiscord = 20;
+        private int chatCount = 0;
 
         public void HandlePayload(Payload payload)
         {
@@ -54,8 +56,9 @@ namespace HoltronBot.Features
             switch (payload.Event.Message.Text)
             {
                 case "!discord":
-                    twitchAPI.SendMessage($"Your discord link, @{payload.Event.ChatterUserName}: https://discord.gg/XwqqGNT7mS");
-                    game.DisplayText($"Your discord link, @{payload.Event.ChatterUserName}: https://discord.gg/XwqqGNT7mS");
+                    twitchAPI.SendMessage($"Your discord link, @{payload.Event.ChatterUserName}: {botConfiguration.DiscordLink}");
+                    game.DisplayText($"Your discord link, @{payload.Event.ChatterUserName}: {botConfiguration.DiscordLink}");
+                    chatCount = 0;
                     break;
                 case "!lurk":
                     twitchAPI.SendMessage($"Your presence is appreciated @{payload.Event.ChatterUserName}!");
@@ -65,6 +68,15 @@ namespace HoltronBot.Features
                     twitchAPI.SendMessage($"@{payload.Event.ChatterUserName}: !discord, !lurk, !giveSporkFood, !giveSporkDrink, !sporksHoard (more to come once Holtron stops being lazy.)");
                     game.DisplayText($"@{payload.Event.ChatterUserName}: !discord, !lurk, !giveSporkFood, !giveSporkDrink, !sporksHoard (more to come once Holtron stops being lazy.)");
                     break;
+            }
+
+            chatCount++;
+
+            if (chatCount >= chatCountDiscord)
+            {
+                twitchAPI.SendMessage($"Like what you see? Join our discord at {botConfiguration.DiscordLink}");
+                game.DisplayText($"Like what you see? Join our discord at {botConfiguration.DiscordLink}");
+                chatCount = 0;
             }
         }
 
